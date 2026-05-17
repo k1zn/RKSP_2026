@@ -27,7 +27,7 @@ export class TreesService {
 
   async create(dto: CreateTreeDto) {
     const tree = this.repo.create(dto as any);
-    const saved = await this.repo.save(tree);
+    const saved = await this.repo.save(tree) as unknown as Tree;
     return this.findOne(saved.id);
   }
 

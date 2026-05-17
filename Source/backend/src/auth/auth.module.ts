@@ -12,7 +12,7 @@ import { User } from '../users/entities/user.entity';
     PassportModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET || 'dendrary_jwt_secret_key_2026',
-      signOptions: { expiresIn: process.env.JWT_EXPIRES_IN || '24h' },
+      signOptions: { expiresIn: (process.env.JWT_EXPIRES_IN || '24h') as any },
     }),
     TypeOrmModule.forFeature([User]),
   ],
