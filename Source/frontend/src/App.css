@@ -94,7 +94,8 @@ body {
 
 /* Stats */
 .stats-grid { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 16px; }
-.stat-card { background: #fff; border: 1px solid #e0e0e0; border-radius: 6px; padding: 20px 28px; text-align: center; min-width: 120px; }
+.stat-card { background: #fff; border: 1px solid #e0e0e0; border-radius: 6px; padding: 20px 28px; text-align: center; min-width: 120px; text-decoration: none; color: inherit; display: block; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
+a.stat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
 .stat-number { font-size: 36px; font-weight: 700; color: #2d6a4f; }
 .stat-label { font-size: 13px; color: #666; margin-top: 4px; }
 

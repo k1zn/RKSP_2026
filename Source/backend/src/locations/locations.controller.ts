@@ -23,7 +23,7 @@ export class LocationsController {
   }
 
   @UseGuards(RolesGuard)
-  @Roles('admin')
+  @Roles('admin', 'user')
   @Post()
   create(@Body() dto: CreateLocationDto) {
     return this.locationsService.create(dto);

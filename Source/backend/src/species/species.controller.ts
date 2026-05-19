@@ -23,7 +23,7 @@ export class SpeciesController {
   }
 
   @UseGuards(RolesGuard)
-  @Roles('admin')
+  @Roles('admin', 'user')
   @Post()
   create(@Body() dto: CreateSpeciesDto) {
     return this.speciesService.create(dto);

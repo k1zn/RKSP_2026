@@ -12,7 +12,7 @@ import LocationsPage from './pages/LocationsPage';
 import UsersPage from './pages/UsersPage';
 import { isAuthenticated } from './api/auth';
 
-const PublicOnlyRoute = ({ children }: { children: JSX.Element }) => {
+const PublicOnlyRoute = ({ children }: { children: React.ReactElement }) => {
   return isAuthenticated() ? <Navigate to="/" /> : children;
 };
 

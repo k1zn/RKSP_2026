@@ -6,7 +6,8 @@ const emptyForm: CreateLocationDto = { name: '', address: '', area_ha: undefined
 
 export default function LocationsPage() {
   const user = getStoredUser();
-  const isAdmin = user?.role === 'admin';
+  const canAdd = user?.role === 'admin' || user?.role === 'user';
+  const canDelete = user?.role === 'admin';
   const [list, setList] = useState<Location[]>([]);
   const [form, setForm] = useState<CreateLocationDto>(emptyForm);
   const [showForm, setShowForm] = useState(false);
@@ -43,10 +44,10 @@ export default function LocationsPage() {
     <div className="page">
       <div className="page-header">
         <h2>Локации</h2>
-        {isAdmin && <button className="btn-primary" onClick={() => setShowForm(!showForm)}>+ Добавить локацию</button>}
+        {canAdd && <button className="btn-primary" onClick={() => setShowForm(!showForm)}>+ Добавить локацию</button>}
       </div>
 
-      {showForm && isAdmin && (
+      {showForm && canAdd && (
         <form onSubmit={handleSubmit} className="inline-form">
           <div className="form-row">
             <div className="form-group">
@@ -82,7 +83,7 @@ export default function LocationsPage() {
             <th>Адрес</th>
             <th>Площадь</th>
             <th>Описание</th>
-            {isAdmin && <th>Действия</th>}
+            {canDelete && <th>Действия</th>}
           </tr>
         </thead>
         <tbody>
@@ -93,14 +94,14 @@ export default function LocationsPage() {
               <td>{loc.address || '—'}</td>
               <td>{loc.area_ha ? `${loc.area_ha} га` : '—'}</td>
               <td>{loc.description || '—'}</td>
-              {isAdmin && (
+              {canDelete && (
                 <td>
                   <button className="btn-danger" onClick={() => handleDelete(loc.id)}>Удалить</button>
                 </td>
               )}
             </tr>
           ))}
-          {list.length === 0 && <tr><td colSpan={isAdmin ? 6 : 5} className="empty-row">Нет данных</td></tr>}
+          {list.length === 0 && <tr><td colSpan={canDelete ? 6 : 5} className="empty-row">Нет данных</td></tr>}
         </tbody>
       </table>
     </div>

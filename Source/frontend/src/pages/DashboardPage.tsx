@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { getStoredUser } from '../api/auth';
 import { getTrees } from '../api/trees';
 import { getSpecies } from '../api/species';
@@ -24,22 +25,29 @@ export default function DashboardPage() {
         Дендрарий — информационная система для каталогизации древесных пород и управления данными о деревьях в парках и дендропарках.
       </p>
       <div className="stats-grid">
-        <div className="stat-card">
+        <Link to="/trees" className="stat-card">
           <div className="stat-number">{stats.trees}</div>
           <div className="stat-label">Деревьев</div>
-        </div>
-        <div className="stat-card">
+        </Link>
+        <Link to="/species" className="stat-card">
           <div className="stat-number">{stats.species}</div>
           <div className="stat-label">Видов</div>
-        </div>
-        <div className="stat-card">
+        </Link>
+        <Link to="/locations" className="stat-card">
           <div className="stat-number">{stats.locations}</div>
           <div className="stat-label">Локаций</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-number">{stats.users}</div>
-          <div className="stat-label">Пользователей</div>
-        </div>
+        </Link>
+        {user?.role === 'admin' ? (
+          <Link to="/users" className="stat-card">
+            <div className="stat-number">{stats.users}</div>
+            <div className="stat-label">Пользователей</div>
+          </Link>
+        ) : (
+          <div className="stat-card">
+            <div className="stat-number">{stats.users}</div>
+            <div className="stat-label">Пользователей</div>
+          </div>
+        )}
       </div>
     </div>
   );

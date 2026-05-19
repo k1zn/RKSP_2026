@@ -61,9 +61,9 @@ export default function UsersPage() {
             <div className="form-group">
               <label>Роль</label>
               <select value={form.role} onChange={e => setForm({ ...form, role: e.target.value })}>
-                <option value="user">user</option>
-                <option value="admin">admin</option>
-                <option value="guest">guest</option>
+                <option value="user">Пользователь</option>
+                <option value="admin">Админ</option>
+                <option value="guest">Гость</option>
               </select>
             </div>
             <div className="form-group">
@@ -97,7 +97,11 @@ export default function UsersPage() {
               <td>{u.name}</td>
               <td>{u.email}</td>
               <td>{u.age ?? '—'}</td>
-              <td><span className={`role-badge role-${u.role}`}>{u.role}</span></td>
+              <td>
+                <span className={`role-badge role-${u.role}`}>
+                  {u.role === 'admin' ? 'Админ' : u.role === 'user' ? 'Пользователь' : 'Гость'}
+                </span>
+              </td>
               <td>
                 <button className="btn-danger" onClick={() => handleDelete(u.id)}>Удалить</button>
               </td>

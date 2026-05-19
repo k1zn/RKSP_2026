@@ -6,7 +6,8 @@ const emptyForm: CreateSpeciesDto = { latin_name: '', common_name: '', family: '
 
 export default function SpeciesPage() {
   const user = getStoredUser();
-  const isAdmin = user?.role === 'admin';
+  const canAdd = user?.role === 'admin' || user?.role === 'user';
+  const canDelete = user?.role === 'admin';
   const [list, setList] = useState<Species[]>([]);
   const [form, setForm] = useState<CreateSpeciesDto>(emptyForm);
   const [showForm, setShowForm] = useState(false);
@@ -43,10 +44,10 @@ export default function SpeciesPage() {
     <div className="page">
       <div className="page-header">
         <h2>Виды деревьев</h2>
-        {isAdmin && <button className="btn-primary" onClick={() => setShowForm(!showForm)}>+ Добавить вид</button>}
+        {canAdd && <button className="btn-primary" onClick={() => setShowForm(!showForm)}>+ Добавить вид</button>}
       </div>
 
-      {showForm && isAdmin && (
+      {showForm && canAdd && (
         <form onSubmit={handleSubmit} className="inline-form">
           <div className="form-row">
             <div className="form-group">
@@ -86,7 +87,7 @@ export default function SpeciesPage() {
             <th>Русское название</th>
             <th>Семейство</th>
             <th>Макс. высота</th>
-            {isAdmin && <th>Действия</th>}
+            {canDelete && <th>Действия</th>}
           </tr>
         </thead>
         <tbody>
@@ -97,14 +98,14 @@ export default function SpeciesPage() {
               <td>{s.common_name}</td>
               <td>{s.family || '—'}</td>
               <td>{s.max_height_m ? `${s.max_height_m} м` : '—'}</td>
-              {isAdmin && (
+              {canDelete && (
                 <td>
                   <button className="btn-danger" onClick={() => handleDelete(s.id)}>Удалить</button>
                 </td>
               )}
             </tr>
           ))}
-          {list.length === 0 && <tr><td colSpan={isAdmin ? 6 : 5} className="empty-row">Нет данных</td></tr>}
+          {list.length === 0 && <tr><td colSpan={canDelete ? 6 : 5} className="empty-row">Нет данных</td></tr>}
         </tbody>
       </table>
     </div>
