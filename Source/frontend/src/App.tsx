@@ -10,6 +10,7 @@ import TreesPage from './pages/TreesPage';
 import SpeciesPage from './pages/SpeciesPage';
 import LocationsPage from './pages/LocationsPage';
 import UsersPage from './pages/UsersPage';
+import HealthAuditPage from './pages/HealthAuditPage';
 import { isAuthenticated } from './api/auth';
 
 const PublicOnlyRoute = ({ children }: { children: React.ReactElement }) => {
@@ -35,6 +36,7 @@ function App() {
                     <Route path="/species" element={<SpeciesPage />} />
                     <Route path="/locations" element={<LocationsPage />} />
                     <Route path="/users" element={<ProtectedRoute requiredRole="admin"><UsersPage /></ProtectedRoute>} />
+                    <Route path="/audit" element={<ProtectedRoute requiredRole="admin"><HealthAuditPage /></ProtectedRoute>} />
                   </Routes>
                 </main>
               </div>

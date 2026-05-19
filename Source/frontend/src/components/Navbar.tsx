@@ -22,6 +22,7 @@ export default function Navbar() {
         <Link to="/species">Виды</Link>
         <Link to="/locations">Локации</Link>
         {user?.role === 'admin' && <Link to="/users">Пользователи</Link>}
+        {user?.role === 'admin' && <Link to="/audit">Журнал здоровья</Link>}
       </div>
       <div className="navbar-user">
         {user && (

@@ -10,6 +10,7 @@ import * as bcrypt from 'bcryptjs';
 import { User } from '../users/entities/user.entity';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
+import { ActivityLoggerService } from '../logger/activity-logger.service';
 
 @Injectable()
 export class AuthService {
@@ -17,15 +18,23 @@ export class AuthService {
     @InjectRepository(User)
     private usersRepo: Repository<User>,
     private jwtService: JwtService,
+    private logger: ActivityLoggerService,
   ) {}
 
   async login(dto: LoginDto) {
     const user = await this.usersRepo.findOne({ where: { email: dto.email } });
-    if (!user) throw new UnauthorizedException('Неверный email или пароль');
+    if (!user) {
+      this.logger.log('login_failed', undefined, `email: ${dto.email}`);
+      throw new UnauthorizedException('Неверный email или пароль');
+    }
 
     const valid = await bcrypt.compare(dto.password, user.password_hash);
-    if (!valid) throw new UnauthorizedException('Неверный email или пароль');
+    if (!valid) {
+      this.logger.log('login_failed', undefined, `email: ${dto.email}`);
+      throw new UnauthorizedException('Неверный email или пароль');
+    }
 
+    this.logger.log('login', { id: user.id, email: user.email, role: user.role });
     const payload = { sub: user.id, email: user.email, role: user.role };
     return {
       access_token: this.jwtService.sign(payload),
@@ -54,6 +63,7 @@ export class AuthService {
     });
     const saved = await this.usersRepo.save(user);
 
+    this.logger.log('register', { id: saved.id, email: saved.email, role: saved.role });
     const payload = { sub: saved.id, email: saved.email, role: saved.role };
     return {
       access_token: this.jwtService.sign(payload),
