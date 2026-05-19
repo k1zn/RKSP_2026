@@ -6,6 +6,10 @@ export interface HealthAuditLog {
   old_status: string | null;
   new_status: string | null;
   changed_at: string;
+  tree?: {
+    species?: { common_name: string };
+    location?: { name: string };
+  };
 }
 
 export const getHealthAuditLog = () =>

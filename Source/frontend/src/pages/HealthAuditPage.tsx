@@ -30,6 +30,8 @@ export default function HealthAuditPage() {
           <tr>
             <th>ID</th>
             <th>Дерево</th>
+            <th>Вид</th>
+            <th>Локация</th>
             <th>Было</th>
             <th>Стало</th>
             <th>Дата и время</th>
@@ -40,13 +42,15 @@ export default function HealthAuditPage() {
             <tr key={l.id}>
               <td>{l.id}</td>
               <td>#{l.tree_id}</td>
+              <td>{l.tree?.species?.common_name || '—'}</td>
+              <td>{l.tree?.location?.name || '—'}</td>
               <td><StatusBadge status={l.old_status} /></td>
               <td><StatusBadge status={l.new_status} /></td>
               <td>{new Date(l.changed_at).toLocaleString('ru-RU')}</td>
             </tr>
           ))}
           {logs.length === 0 && !error && (
-            <tr><td colSpan={5} className="empty-row">Нет записей</td></tr>
+            <tr><td colSpan={7} className="empty-row">Нет записей</td></tr>
           )}
         </tbody>
       </table>

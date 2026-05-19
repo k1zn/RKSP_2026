@@ -11,6 +11,12 @@ export class AuditService {
   ) {}
 
   findAll() {
-    return this.repo.find({ order: { changed_at: 'DESC' } });
+    return this.repo
+      .createQueryBuilder('log')
+      .leftJoinAndSelect('log.tree', 'tree')
+      .leftJoinAndSelect('tree.species', 'species')
+      .leftJoinAndSelect('tree.location', 'location')
+      .orderBy('log.changed_at', 'DESC')
+      .getMany();
   }
 }
