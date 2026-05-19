@@ -4,7 +4,7 @@ import {
   ConflictException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, QueryFailedError } from 'typeorm';
 import { Species } from './entities/species.entity';
 import { CreateSpeciesDto } from './dto/create-species.dto';
 import { UpdateSpeciesDto } from './dto/update-species.dto';
@@ -46,7 +46,14 @@ export class SpeciesService {
 
   async remove(id: number) {
     const s = await this.findOne(id);
-    await this.repo.remove(s);
+    try {
+      await this.repo.remove(s);
+    } catch (err) {
+      if (err instanceof QueryFailedError && (err as any).code === 'P0001') {
+        throw new ConflictException((err as any).driverError?.message ?? 'Невозможно удалить вид: есть связанные деревья');
+      }
+      throw err;
+    }
     return { message: 'Вид удалён' };
   }
 }
