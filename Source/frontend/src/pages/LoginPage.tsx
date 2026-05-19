@@ -27,7 +27,7 @@ export default function LoginPage() {
   return (
     <div className="login-page">
       <div className="login-card">
-        <h1>🌳 Дендрарий</h1>
+        <h1><img src="/logo192.png" alt="logo" className="app-logo" /> Дендрарий</h1>
         <p className="login-subtitle">Каталог деревьев и дендропарков</p>
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">

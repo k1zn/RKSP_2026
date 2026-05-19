@@ -22,7 +22,8 @@ body {
   height: 52px;
   flex-shrink: 0;
 }
-.navbar-brand a { color: #fff; text-decoration: none; font-size: 18px; font-weight: 700; }
+.navbar-brand a { display: flex; align-items: center; color: #fff; text-decoration: none; font-size: 18px; font-weight: 700; }
+.app-logo { height: 20px; width: 20px; margin-right: 8px; }
 .navbar-links { display: flex; gap: 16px; flex: 1; }
 .navbar-links a { color: #b7e4c7; text-decoration: none; font-size: 14px; }
 .navbar-links a:hover { color: #fff; }
@@ -34,7 +35,8 @@ body {
 /* Login */
 .login-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #f5f5f0; }
 .login-card { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 40px; width: 360px; text-align: center; }
-.login-card h1 { font-size: 28px; color: #2d6a4f; margin-bottom: 4px; }
+.login-card h1 { display: flex; align-items: center; justify-content: center; font-size: 28px; color: #2d6a4f; margin-bottom: 4px; }
+.login-card h1 .app-logo { height: 32px; width: 32px; }
 .login-subtitle { color: #666; margin-bottom: 24px; font-size: 13px; }
 .login-switch { margin-top: 16px; font-size: 13px; color: #666; }
 .login-switch a { color: #2d6a4f; text-decoration: none; font-weight: 500; }

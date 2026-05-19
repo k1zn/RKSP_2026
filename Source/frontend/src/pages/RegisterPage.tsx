@@ -34,7 +34,7 @@ export default function RegisterPage() {
   return (
     <div className="login-page">
       <div className="login-card">
-        <h1>🌳 Дендрарий</h1>
+        <h1><img src="/logo192.png" alt="logo" className="app-logo" /> Дендрарий</h1>
         <p className="login-subtitle">Регистрация</p>
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">

@@ -14,7 +14,7 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar-brand">
-        <Link to="/">🌳 Дендрарий</Link>
+        <Link to="/"><img src="/logo192.png" alt="logo" className="app-logo" /> Дендрарий</Link>
       </div>
       <div className="navbar-links">
         <Link to="/">Главная</Link>

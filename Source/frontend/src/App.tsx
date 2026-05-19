@@ -12,12 +12,16 @@ import LocationsPage from './pages/LocationsPage';
 import UsersPage from './pages/UsersPage';
 import { isAuthenticated } from './api/auth';
 
+const PublicOnlyRoute = ({ children }: { children: JSX.Element }) => {
+  return isAuthenticated() ? <Navigate to="/" /> : children;
+};
+
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={isAuthenticated() ? <Navigate to="/" /> : <LoginPage />} />
-        <Route path="/register" element={isAuthenticated() ? <Navigate to="/" /> : <RegisterPage />} />
+        <Route path="/login" element={<PublicOnlyRoute><LoginPage /></PublicOnlyRoute>} />
+        <Route path="/register" element={<PublicOnlyRoute><RegisterPage /></PublicOnlyRoute>} />
         <Route
           path="/*"
           element={
