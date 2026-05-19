@@ -23,21 +23,21 @@ export class TreesController {
   }
 
   @UseGuards(RolesGuard)
-  @Roles('admin')
+  @Roles('admin', 'user')
   @Post()
   create(@Body() dto: CreateTreeDto) {
     return this.treesService.create(dto);
   }
 
   @UseGuards(RolesGuard)
-  @Roles('admin')
+  @Roles('admin', 'user')
   @Patch(':id')
   update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateTreeDto) {
     return this.treesService.update(id, dto);
   }
 
   @UseGuards(RolesGuard)
-  @Roles('admin')
+  @Roles('admin', 'user')
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.treesService.remove(id);

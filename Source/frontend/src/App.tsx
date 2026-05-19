@@ -4,6 +4,7 @@ import './App.css';
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
 import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import TreesPage from './pages/TreesPage';
 import SpeciesPage from './pages/SpeciesPage';
@@ -16,6 +17,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={isAuthenticated() ? <Navigate to="/" /> : <LoginPage />} />
+        <Route path="/register" element={isAuthenticated() ? <Navigate to="/" /> : <RegisterPage />} />
         <Route
           path="/*"
           element={

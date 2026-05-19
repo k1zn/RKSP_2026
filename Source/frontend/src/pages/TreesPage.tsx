@@ -11,7 +11,7 @@ const emptyForm: CreateTreeDto = { species_id: 0, location_id: undefined, plant_
 
 export default function TreesPage() {
   const user = getStoredUser();
-  const isAdmin = user?.role === 'admin';
+  const canEdit = user?.role === 'admin' || user?.role === 'user';
   const [trees, setTrees] = useState<Tree[]>([]);
   const [speciesList, setSpeciesList] = useState<Species[]>([]);
   const [locationsList, setLocationsList] = useState<Location[]>([]);
@@ -55,10 +55,10 @@ export default function TreesPage() {
     <div className="page">
       <div className="page-header">
         <h2>Деревья</h2>
-        {isAdmin && <button className="btn-primary" onClick={() => setShowForm(!showForm)}>+ Добавить дерево</button>}
+        {canEdit && <button className="btn-primary" onClick={() => setShowForm(!showForm)}>+ Добавить дерево</button>}
       </div>
 
-      {showForm && isAdmin && (
+      {showForm && canEdit && (
         <form onSubmit={handleSubmit} className="inline-form">
           <div className="form-row">
             <div className="form-group">
@@ -109,7 +109,7 @@ export default function TreesPage() {
             <th>Дата посадки</th>
             <th>Состояние</th>
             <th>Заметки</th>
-            {isAdmin && <th>Действия</th>}
+            {canEdit && <th>Действия</th>}
           </tr>
         </thead>
         <tbody>
@@ -121,14 +121,14 @@ export default function TreesPage() {
               <td>{t.plant_date || '—'}</td>
               <td><span className={`health-badge ${HEALTH_CLASSES[t.health_status]}`}>{HEALTH_LABELS[t.health_status]}</span></td>
               <td>{t.notes || '—'}</td>
-              {isAdmin && (
+              {canEdit && (
                 <td>
                   <button className="btn-danger" onClick={() => handleDelete(t.id)}>Удалить</button>
                 </td>
               )}
             </tr>
           ))}
-          {trees.length === 0 && <tr><td colSpan={isAdmin ? 7 : 6} className="empty-row">Нет данных</td></tr>}
+          {trees.length === 0 && <tr><td colSpan={canEdit ? 7 : 6} className="empty-row">Нет данных</td></tr>}
         </tbody>
       </table>
     </div>

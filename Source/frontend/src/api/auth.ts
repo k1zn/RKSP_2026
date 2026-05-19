@@ -12,6 +12,16 @@ export async function login(email: string, password: string): Promise<{ access_t
   return res.data;
 }
 
+export async function register(
+  name: string,
+  email: string,
+  password: string,
+  age?: number,
+): Promise<{ access_token: string; user: AuthUser }> {
+  const res = await api.post('/auth/register', { name, email, password, age });
+  return res.data;
+}
+
 export function saveAuth(token: string, user: AuthUser) {
   localStorage.setItem('token', token);
   localStorage.setItem('user', JSON.stringify(user));

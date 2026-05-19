@@ -36,6 +36,9 @@ body {
 .login-card { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 40px; width: 360px; text-align: center; }
 .login-card h1 { font-size: 28px; color: #2d6a4f; margin-bottom: 4px; }
 .login-subtitle { color: #666; margin-bottom: 24px; font-size: 13px; }
+.login-switch { margin-top: 16px; font-size: 13px; color: #666; }
+.login-switch a { color: #2d6a4f; text-decoration: none; font-weight: 500; }
+.login-switch a:hover { text-decoration: underline; }
 .login-form { text-align: left; }
 
 /* Forms */

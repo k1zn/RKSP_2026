@@ -22,7 +22,7 @@ import { Tree } from './trees/entities/tree.entity';
       password: process.env.DB_PASSWORD || 'postgres',
       database: process.env.DB_NAME || 'dendrary',
       entities: [User, Species, Location, Tree],
-      synchronize: true,
+      synchronize: false,
     }),
     AuthModule,
     UsersModule,
