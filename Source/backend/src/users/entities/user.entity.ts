@@ -5,20 +5,20 @@ export type UserRole = 'admin' | 'user' | 'guest';
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column({ nullable: false })
-  name: string;
+  name!: string;
 
   @Column({ unique: true, nullable: false })
-  email: string;
+  email!: string;
 
   @Column({ nullable: true, type: 'int' })
-  age: number | null;
+  age!: number | null;
 
   @Column({ default: 'user' })
-  role: UserRole;
+  role!: UserRole;
 
   @Column({ nullable: false })
-  password_hash: string;
+  password_hash!: string;
 }

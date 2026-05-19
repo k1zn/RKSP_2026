@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  ConflictException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -25,12 +29,19 @@ export class AuthService {
     const payload = { sub: user.id, email: user.email, role: user.role };
     return {
       access_token: this.jwtService.sign(payload),
-      user: { id: user.id, name: user.name, email: user.email, role: user.role },
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
     };
   }
 
   async register(dto: RegisterDto) {
-    const existing = await this.usersRepo.findOne({ where: { email: dto.email } });
+    const existing = await this.usersRepo.findOne({
+      where: { email: dto.email },
+    });
     if (existing) throw new ConflictException('Email уже используется');
 
     const password_hash = await bcrypt.hash(dto.password, 10);
@@ -46,7 +57,12 @@ export class AuthService {
     const payload = { sub: saved.id, email: saved.email, role: saved.role };
     return {
       access_token: this.jwtService.sign(payload),
-      user: { id: saved.id, name: saved.name, email: saved.email, role: saved.role },
+      user: {
+        id: saved.id,
+        name: saved.name,
+        email: saved.email,
+        role: saved.role,
+      },
     };
   }
 }

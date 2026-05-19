@@ -1,4 +1,10 @@
-import { IsInt, IsOptional, IsIn, IsString, IsDateString } from 'class-validator';
+import {
+  IsInt,
+  IsOptional,
+  IsIn,
+  IsString,
+  IsDateString,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class UpdateTreeDto {

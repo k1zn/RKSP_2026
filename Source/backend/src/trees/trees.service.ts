@@ -20,14 +20,17 @@ export class TreesService {
   }
 
   async findOne(id: number) {
-    const tree = await this.repo.findOne({ where: { id }, relations: ['species', 'location'] });
+    const tree = await this.repo.findOne({
+      where: { id },
+      relations: ['species', 'location'],
+    });
     if (!tree) throw new NotFoundException(`Дерево с id=${id} не найдено`);
     return tree;
   }
 
   async create(dto: CreateTreeDto) {
     const tree = this.repo.create(dto as any);
-    const saved = await this.repo.save(tree) as unknown as Tree;
+    const saved = (await this.repo.save(tree)) as unknown as Tree;
     return this.findOne(saved.id);
   }
 

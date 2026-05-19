@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Species } from './entities/species.entity';
@@ -23,8 +27,13 @@ export class SpeciesService {
   }
 
   async create(dto: CreateSpeciesDto) {
-    const existing = await this.repo.findOne({ where: { latin_name: dto.latin_name } });
-    if (existing) throw new ConflictException('Вид с таким латинским названием уже существует');
+    const existing = await this.repo.findOne({
+      where: { latin_name: dto.latin_name },
+    });
+    if (existing)
+      throw new ConflictException(
+        'Вид с таким латинским названием уже существует',
+      );
     const s = this.repo.create(dto);
     return this.repo.save(s);
   }

@@ -1,4 +1,13 @@
-import { IsString, IsNotEmpty, IsEmail, IsInt, IsOptional, Min, Max, IsIn } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsEmail,
+  IsInt,
+  IsOptional,
+  Min,
+  Max,
+  IsIn,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateUserDto {
