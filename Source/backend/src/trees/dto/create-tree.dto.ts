@@ -3,24 +3,24 @@ import { Type } from 'class-transformer';
 
 export class CreateTreeDto {
   @Type(() => Number)
-  @IsInt()
-  @IsNotEmpty()
+  @IsInt({ message: 'Некорректный идентификатор вида' })
+  @IsNotEmpty({ message: 'Вид обязателен' })
   species_id: number;
 
   @IsOptional()
   @Type(() => Number)
-  @IsInt()
+  @IsInt({ message: 'Некорректный идентификатор локации' })
   location_id?: number;
 
   @IsOptional()
-  @IsDateString()
+  @IsDateString({}, { message: 'Некорректный формат даты' })
   plant_date?: string;
 
   @IsOptional()
-  @IsIn(['healthy', 'ill', 'dead'])
+  @IsIn(['healthy', 'ill', 'dead'], { message: 'Недопустимый статус здоровья' })
   health_status?: string;
 
   @IsOptional()
-  @IsString()
+  @IsString({ message: 'Заметки должны быть строкой' })
   notes?: string;
 }

@@ -66,6 +66,9 @@ body {
 .btn-secondary:hover { background: #f0f0f0; }
 .btn-danger { background: #fff; color: #c0392b; border: 1px solid #e0b4b4; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; }
 .btn-danger:hover { background: #fff0f0; }
+.btn-edit { background: #fff; color: #1d6fa5; border: 1px solid #a8ccdf; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+.btn-edit:hover { background: #edf5fb; }
+.td-actions { display: flex; gap: 6px; align-items: center; }
 
 /* Page */
 .page { }

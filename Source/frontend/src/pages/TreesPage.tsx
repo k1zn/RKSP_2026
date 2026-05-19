@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getTrees, createTree, deleteTree, Tree, CreateTreeDto } from '../api/trees';
+import { getTrees, createTree, updateTree, deleteTree, Tree, CreateTreeDto } from '../api/trees';
 import { getSpecies, Species } from '../api/species';
 import { getLocations, Location } from '../api/locations';
 import { getStoredUser } from '../api/auth';
@@ -11,12 +11,13 @@ const emptyForm: CreateTreeDto = { species_id: 0, location_id: undefined, plant_
 
 export default function TreesPage() {
   const user = getStoredUser();
-  const canAdd = user?.role === 'admin' || user?.role === 'user';
-  const canDelete = user?.role === 'admin';
+  const isAdmin = user?.role === 'admin';
+  const canAdd = isAdmin || user?.role === 'user';
   const [trees, setTrees] = useState<Tree[]>([]);
   const [speciesList, setSpeciesList] = useState<Species[]>([]);
   const [locationsList, setLocationsList] = useState<Location[]>([]);
   const [form, setForm] = useState<CreateTreeDto>(emptyForm);
+  const [editId, setEditId] = useState<number | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [error, setError] = useState('');
 
@@ -28,14 +29,44 @@ export default function TreesPage() {
     getLocations().then(setLocationsList).catch(() => {});
   }, []);
 
+  const openAdd = () => {
+    setEditId(null);
+    setForm(emptyForm);
+    setError('');
+    setShowForm(true);
+  };
+
+  const openEdit = (t: Tree) => {
+    setEditId(t.id);
+    setForm({
+      species_id: t.species_id,
+      location_id: t.location_id ?? undefined,
+      plant_date: t.plant_date ?? '',
+      health_status: t.health_status,
+      notes: t.notes ?? '',
+    });
+    setError('');
+    setShowForm(true);
+  };
+
+  const handleCancel = () => {
+    setShowForm(false);
+    setEditId(null);
+    setForm(emptyForm);
+    setError('');
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     if (!form.species_id) { setError('Выберите вид'); return; }
     try {
-      await createTree(form);
-      setForm(emptyForm);
-      setShowForm(false);
+      if (editId !== null) {
+        await updateTree(editId, form);
+      } else {
+        await createTree(form);
+      }
+      handleCancel();
       load();
     } catch (err: any) {
       setError(err.response?.data?.message || 'Ошибка');
@@ -56,11 +87,14 @@ export default function TreesPage() {
     <div className="page">
       <div className="page-header">
         <h2>Деревья</h2>
-        {canAdd && <button className="btn-primary" onClick={() => setShowForm(!showForm)}>+ Добавить дерево</button>}
+        {canAdd && <button className="btn-primary" onClick={openAdd}>+ Добавить дерево</button>}
       </div>
 
       {showForm && canAdd && (
         <form onSubmit={handleSubmit} className="inline-form">
+          <h3 style={{ marginBottom: 12, fontSize: 15, color: '#1b4332' }}>
+            {editId !== null ? 'Редактирование дерева' : 'Новое дерево'}
+          </h3>
           <div className="form-row">
             <div className="form-group">
               <label>Вид *</label>
@@ -96,7 +130,7 @@ export default function TreesPage() {
           {error && <div className="error-msg">{error}</div>}
           <div className="form-actions">
             <button type="submit" className="btn-primary">Сохранить</button>
-            <button type="button" className="btn-secondary" onClick={() => setShowForm(false)}>Отмена</button>
+            <button type="button" className="btn-secondary" onClick={handleCancel}>Отмена</button>
           </div>
         </form>
       )}
@@ -110,7 +144,7 @@ export default function TreesPage() {
             <th>Дата посадки</th>
             <th>Состояние</th>
             <th>Заметки</th>
-            {canDelete && <th>Действия</th>}
+            {isAdmin && <th>Действия</th>}
           </tr>
         </thead>
         <tbody>
@@ -122,14 +156,15 @@ export default function TreesPage() {
               <td>{t.plant_date || '—'}</td>
               <td><span className={`health-badge ${HEALTH_CLASSES[t.health_status]}`}>{HEALTH_LABELS[t.health_status]}</span></td>
               <td>{t.notes || '—'}</td>
-              {canDelete && (
-                <td>
+              {isAdmin && (
+                <td className="td-actions">
+                  <button className="btn-edit" onClick={() => openEdit(t)}>Изменить</button>
                   <button className="btn-danger" onClick={() => handleDelete(t.id)}>Удалить</button>
                 </td>
               )}
             </tr>
           ))}
-          {trees.length === 0 && <tr><td colSpan={canDelete ? 7 : 6} className="empty-row">Нет данных</td></tr>}
+          {trees.length === 0 && <tr><td colSpan={isAdmin ? 7 : 6} className="empty-row">Нет данных</td></tr>}
         </tbody>
       </table>
     </div>

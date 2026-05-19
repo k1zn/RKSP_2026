@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { getUsers, createUser, deleteUser, User, CreateUserDto } from '../api/users';
+import { getStoredUser } from '../api/auth';
 
 const emptyForm: CreateUserDto = { name: '', email: '', age: undefined, password: 'changeme', role: 'user' };
 
 export default function UsersPage() {
+  const currentUser = getStoredUser();
   const [list, setList] = useState<User[]>([]);
   const [form, setForm] = useState<CreateUserDto>(emptyForm);
   const [showForm, setShowForm] = useState(false);
@@ -103,7 +105,9 @@ export default function UsersPage() {
                 </span>
               </td>
               <td>
-                <button className="btn-danger" onClick={() => handleDelete(u.id)}>Удалить</button>
+                {u.id !== currentUser?.id && u.role !== 'admin' && (
+                  <button className="btn-danger" onClick={() => handleDelete(u.id)}>Удалить</button>
+                )}
               </td>
             </tr>
           ))}

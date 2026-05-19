@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
@@ -41,9 +41,11 @@ export class UsersService {
     return result;
   }
 
-  async remove(id: number) {
+  async remove(id: number, currentUserId: number) {
+    if (id === currentUserId) throw new ForbiddenException('Нельзя удалить собственный аккаунт');
     const user = await this.repo.findOne({ where: { id } });
     if (!user) throw new NotFoundException(`Пользователь с id=${id} не найден`);
+    if (user.role === 'admin') throw new ForbiddenException('Нельзя удалить администратора');
     await this.repo.remove(user);
     return { message: 'Пользователь удалён' };
   }

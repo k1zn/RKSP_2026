@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { getSpecies, createSpecies, deleteSpecies, Species, CreateSpeciesDto } from '../api/species';
+import { getSpecies, createSpecies, updateSpecies, deleteSpecies, Species, CreateSpeciesDto } from '../api/species';
 import { getStoredUser } from '../api/auth';
 
 const emptyForm: CreateSpeciesDto = { latin_name: '', common_name: '', family: '', description: '', max_height_m: undefined };
 
 export default function SpeciesPage() {
   const user = getStoredUser();
-  const canAdd = user?.role === 'admin' || user?.role === 'user';
-  const canDelete = user?.role === 'admin';
+  const isAdmin = user?.role === 'admin';
+  const canAdd = isAdmin || user?.role === 'user';
   const [list, setList] = useState<Species[]>([]);
   const [form, setForm] = useState<CreateSpeciesDto>(emptyForm);
+  const [editId, setEditId] = useState<number | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [error, setError] = useState('');
 
@@ -17,13 +18,43 @@ export default function SpeciesPage() {
 
   useEffect(() => { load(); }, []);
 
+  const openAdd = () => {
+    setEditId(null);
+    setForm(emptyForm);
+    setError('');
+    setShowForm(true);
+  };
+
+  const openEdit = (s: Species) => {
+    setEditId(s.id);
+    setForm({
+      latin_name: s.latin_name,
+      common_name: s.common_name,
+      family: s.family ?? '',
+      description: s.description ?? '',
+      max_height_m: s.max_height_m ?? undefined,
+    });
+    setError('');
+    setShowForm(true);
+  };
+
+  const handleCancel = () => {
+    setShowForm(false);
+    setEditId(null);
+    setForm(emptyForm);
+    setError('');
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     try {
-      await createSpecies(form);
-      setForm(emptyForm);
-      setShowForm(false);
+      if (editId !== null) {
+        await updateSpecies(editId, form);
+      } else {
+        await createSpecies(form);
+      }
+      handleCancel();
       load();
     } catch (err: any) {
       setError(err.response?.data?.message || 'Ошибка');
@@ -44,11 +75,14 @@ export default function SpeciesPage() {
     <div className="page">
       <div className="page-header">
         <h2>Виды деревьев</h2>
-        {canAdd && <button className="btn-primary" onClick={() => setShowForm(!showForm)}>+ Добавить вид</button>}
+        {canAdd && <button className="btn-primary" onClick={openAdd}>+ Добавить вид</button>}
       </div>
 
       {showForm && canAdd && (
         <form onSubmit={handleSubmit} className="inline-form">
+          <h3 style={{ marginBottom: 12, fontSize: 15, color: '#1b4332' }}>
+            {editId !== null ? 'Редактирование вида' : 'Новый вид'}
+          </h3>
           <div className="form-row">
             <div className="form-group">
               <label>Латинское название *</label>
@@ -74,7 +108,7 @@ export default function SpeciesPage() {
           {error && <div className="error-msg">{error}</div>}
           <div className="form-actions">
             <button type="submit" className="btn-primary">Сохранить</button>
-            <button type="button" className="btn-secondary" onClick={() => setShowForm(false)}>Отмена</button>
+            <button type="button" className="btn-secondary" onClick={handleCancel}>Отмена</button>
           </div>
         </form>
       )}
@@ -87,7 +121,7 @@ export default function SpeciesPage() {
             <th>Русское название</th>
             <th>Семейство</th>
             <th>Макс. высота</th>
-            {canDelete && <th>Действия</th>}
+            {isAdmin && <th>Действия</th>}
           </tr>
         </thead>
         <tbody>
@@ -98,14 +132,15 @@ export default function SpeciesPage() {
               <td>{s.common_name}</td>
               <td>{s.family || '—'}</td>
               <td>{s.max_height_m ? `${s.max_height_m} м` : '—'}</td>
-              {canDelete && (
-                <td>
+              {isAdmin && (
+                <td className="td-actions">
+                  <button className="btn-edit" onClick={() => openEdit(s)}>Изменить</button>
                   <button className="btn-danger" onClick={() => handleDelete(s.id)}>Удалить</button>
                 </td>
               )}
             </tr>
           ))}
-          {list.length === 0 && <tr><td colSpan={canDelete ? 6 : 5} className="empty-row">Нет данных</td></tr>}
+          {list.length === 0 && <tr><td colSpan={isAdmin ? 6 : 5} className="empty-row">Нет данных</td></tr>}
         </tbody>
       </table>
     </div>

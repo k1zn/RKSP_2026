@@ -3,24 +3,24 @@ import { Type } from 'class-transformer';
 
 export class UpdateSpeciesDto {
   @IsOptional()
-  @IsString()
+  @IsString({ message: 'Латинское название должно быть строкой' })
   latin_name?: string;
 
   @IsOptional()
-  @IsString()
+  @IsString({ message: 'Русское название должно быть строкой' })
   common_name?: string;
 
   @IsOptional()
-  @IsString()
+  @IsString({ message: 'Семейство должно быть строкой' })
   family?: string;
 
   @IsOptional()
-  @IsString()
+  @IsString({ message: 'Описание должно быть строкой' })
   description?: string;
 
   @IsOptional()
   @Type(() => Number)
-  @IsNumber()
-  @Min(0)
+  @IsNumber({}, { message: 'Высота должна быть числом' })
+  @Min(0, { message: 'Высота не может быть отрицательной' })
   max_height_m?: number;
 }

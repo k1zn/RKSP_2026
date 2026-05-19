@@ -2,21 +2,21 @@ import { IsEmail, IsInt, IsNotEmpty, IsOptional, IsString, Max, Min } from 'clas
 import { Type } from 'class-transformer';
 
 export class RegisterDto {
-  @IsString()
-  @IsNotEmpty()
+  @IsString({ message: 'Имя должно быть строкой' })
+  @IsNotEmpty({ message: 'Имя обязательно' })
   name: string;
 
-  @IsEmail()
+  @IsEmail({}, { message: 'Некорректный email' })
   email: string;
 
-  @IsString()
-  @IsNotEmpty()
+  @IsString({ message: 'Пароль должен быть строкой' })
+  @IsNotEmpty({ message: 'Пароль обязателен' })
   password: string;
 
   @IsOptional()
   @Type(() => Number)
-  @IsInt()
-  @Min(0)
-  @Max(150)
+  @IsInt({ message: 'Возраст должен быть целым числом' })
+  @Min(0, { message: 'Возраст не может быть отрицательным' })
+  @Max(150, { message: 'Возраст не может быть больше 150' })
   age?: number;
 }
